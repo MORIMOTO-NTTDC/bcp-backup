@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCPバックアップサービス｜アカウント管理ポータル</title>
+    <link rel="icon" href="img/favicon.ico">
+    <link href="./css/vendor.css" rel="stylesheet">
+    <link href="./css/app.css" rel="stylesheet">
+    <script src="./js/vendor.js"></script>
+</head>
+<body style="background-color: #fafafa;">
+
+    <noscript>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-8">
+                    <h2 class="alert alert-danger">
+                        <strong>JavaScriptが無効です</strong><br>
+                        JavaScriptを有効にしてください。設定方法はご利用のブラウザに従ってください。
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </noscript>
+
+    <div id="loading" style="display: none"><span></span><img src="./img/loadiing.svg" style="width:50px;"></div>
+
+    <!-- ログイン画面 -->
+    <div data-bind="if: currentComponentName() === 'SC00'" >
+        <!-- ko component: currentComponentName() --><!-- /ko -->
+    </div>
+    
+    <!-- ko component: 'sidebar-offcanvas' --><!-- /ko -->
+
+    <div data-bind="if: currentComponentName() !== 'SC00'">
+        <div class="container-fluid p-0 d-flex flex-row" style="max-width: 1600px;">
+
+            <!-- サイドメニュー -->
+            <!-- ko component: 'sidebar' --><!-- /ko -->
+
+            <!-- 右ペイン -->
+            <div class="container-fluid p-0" style="background-color: #fafafa; min-height: 100vh;">
+
+                <!-- ナビゲーションバー -->
+                <div data-bind="component: 'navbar'" class="bg-dark"></div>
+
+                <div style="height: 15px" class="bg-dark">
+                    <div style="height: 16px; border-top-left-radius: 7px; background-color: #fafafa;"></div>
+                </div>
+
+                <!-- メインコンテンツ -->
+                <div class="px-4 py-2">
+                    <!-- ko component: currentComponentName() --><!-- /ko -->
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let mockupMessage = null;
+    </script>

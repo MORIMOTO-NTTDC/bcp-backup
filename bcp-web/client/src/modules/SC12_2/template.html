@@ -1,0 +1,41 @@
+<template id="SC12_2-template">
+
+    <!-- <h1 class="mb-4">お知らせ管理｜新規登録</h1> -->
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-sdate" class="form-label"><b>掲載開始日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_2-sdate" data-bind="value: startDate" style="width:150px">
+        <p class="text-danger" data-bind="text: startDate.errorMessage, visible: startDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-edate" class="form-label"><b>掲載終了日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_2-edate" data-bind="value: endDate" style="width:150px">
+        <p class="text-danger" data-bind="text: endDate.errorMessage, visible: endDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-title" class="form-label"><b>タイトル</b></label>
+        <input type="input" class="form-control" id="sc12_2-title" maxlength=50 data-bind="value: title" style="max-width:50rem;">
+        <p class="text-danger" data-bind="text: title.errorMessage, visible: title.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-article" class="form-label"><b>記事</b></label>
+        <div class="input-group">
+            <textarea class="form-control" rows="6" id="sc12_2-article" maxlength=500 data-bind="textInput: article"></textarea>
+        </div>
+        <p class="text-danger" data-bind="text: article.errorMessage, visible: article.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="addUploadfile" class="form-label"><b>添付ファイル</b></label>
+        <input type="file" class="form-control" id="addUploadfile" data-bind="value: attachedfile" style="max-width:500px"/>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: regist">登録</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">キャンセル</button>
+    </div>
+
+</template>

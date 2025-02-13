@@ -1,0 +1,71 @@
+<template id="SC12_1-template">
+
+    <div class="mb-4">
+        <button class="btn btn-lg btn-dark bg-gradient" data-bind="click: showSC12_2">
+            新規登録
+            <svg style="vertical-align:-2px;" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="mb-4">
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && infos().length === 0">
+            該当データはありません。
+        </div>
+
+        <!-- PCやタブレットで表示する場合はtableタグで -->
+        <!-- ko if: !smartPhone() -->
+        <table class="table table-hover" data-bind="visible: infos().length > 0">
+            <thead class="sticky-top table-light">
+                <tr>
+                    <th scope="col" style="width:17rem;">掲載期間</th>
+                    <th scope="col">タイトル</th>
+                    <th scope="col">登録者</th>
+                    <th scope="col" style="width:8rem;">添付ファイル</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: {data:infos, afterAdd: flashAnimation}">
+                <tr data-bind="click:$parent.showSC12_3" style="cursor: pointer;">
+                    <td>
+                        <span data-bind="text: startDate" class="font-monospace"></span>
+                        ～
+                        <span data-bind="visible: endDate, text: endDate" class="font-monospace"></span>
+                        <span data-bind="visible: !endDate">無期限</span>
+                    </td>
+                    <td data-bind="text: title"></td>
+                    <td data-bind="text: userName"></td>
+                    <td data-bind="text: (files.length > 0 ? '有' : '')"></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- /ko -->
+
+        <!-- スマホで表示する場合にはcardで -->
+        <!-- ko if: smartPhone -->
+        <!-- ko foreach: {data:infos} -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header bg-light font-monospace">
+                <span data-bind="text: startDate" class="fw-bold"></span> - <span data-bind="text: endDate" class="fw-bold"></span>
+                <a href="#" class="float-end" data-bind="click:$parent.showSC12_3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="card-text" data-bind="text: title"></div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+
+        <button class="btn btn-secondary bg-gradient"
+            data-bind="visible: hasContinueData, click: fetchMore">続きを表示</button>
+    
+    </div>
+
+</template>

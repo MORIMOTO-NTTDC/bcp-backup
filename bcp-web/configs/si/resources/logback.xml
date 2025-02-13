@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+
+	<!-- ログ出力フォルダの設定 -->
+	<property name="LOG_DIR" value="/var/log/bcp" />
+	
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern><![CDATA[date:%d{yyyy-MM-dd HH:mm:ss}\tthread:%thread\tUSER:%X{USER}\tX-Track:%X{X-Track}\tlevel:%-5level\tlogger:%-48logger{48}\tmessage:%replace(%msg){'(\r\n|\r|\n)','$1  '}%n%replace(%replace(%xEx){'(\r\n|\r|\n)','$1  '}){'  $',''}%nopex]]></pattern>
+        </encoder>
+    </appender>
+
+    <appender name="APPLICATION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}//bcpweb.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/bcpweb.log.%d{yyyyMMdd}.%i</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+              <maxFileSize>1GB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern><![CDATA[[%d{yyyy-MM-dd HH:mm:ss}\t%-5level\t%-48logger{48}\tX-Track:%X{X-Track}\t[ユーザ情報:%X{USER}]\t%replace(%msg){'(\r\n|\r|\n)','$1  '}%n%replace(%replace(%xEx){'(\r\n|\r|\n)','$1  '}){'  $',''}%nopex]]></pattern>
+        </encoder>
+    </appender>
+
+    <!-- Application Loggers -->
+    <logger name="jp.co.nttdata.bcp">
+        <level value="debug" />
+    </logger>
+
+    <logger name="jp.co.nttdata.bcp.domain.repository">
+        <level value="trace" />
+    </logger>
+
+    <!-- TERASOLUNA -->
+    <logger name="org.terasoluna.gfw">
+        <level value="info" />
+    </logger>
+    <logger name="org.terasoluna.gfw.web.logging.TraceLoggingInterceptor">
+        <level value="trace" />
+    </logger>
+    <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger">
+        <level value="info" />
+    </logger>
+    <logger name="org.terasoluna.gfw.common.exception.ExceptionLogger.Monitoring" additivity="false">
+        <level value="error" />
+        <appender-ref ref="MONITORING_LOG_FILE" />
+    </logger>
+
+    <!-- 3rdparty Loggers -->
+    <logger name="org.springframework">
+        <level value="warn" />
+    </logger>
+
+    <logger name="org.springframework.web.servlet">
+        <level value="info" />
+    </logger>
+
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+        <level value="trace" />
+    </logger>
+
+    <logger name="org.springframework.jdbc.core.JdbcTemplate">
+        <level value="trace" />
+    </logger>
+
+    <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+        <level value="debug" />
+    </logger>
+    
+
+    <!--  REMOVE THIS LINE IF YOU USE JPA
+    <logger name="org.hibernate.SQL" additivity="true">
+        <level value="debug" />
+    </logger>
+    <logger name="org.hibernate.type">
+        <level value="trace" />
+    </logger>
+    <logger name="org.hibernate.engine.transaction">
+        <level value="debug" />
+    </logger>
+          REMOVE THIS LINE IF YOU USE JPA  -->
+    <logger name="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <level value="debug" />
+    </logger>
+
+    <root level="warn">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="APPLICATION_LOG_FILE" />
+    </root>
+
+</configuration>

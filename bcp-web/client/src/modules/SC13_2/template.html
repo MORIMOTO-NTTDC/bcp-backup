@@ -1,0 +1,75 @@
+<template id="SC13_2-template">
+
+    <!-- <h1 class="mb-4">ユーザ管理｜新規登録</h1> -->
+
+    <div class="mb-4 p-0" style="max-width: 35rem">
+        <label class="form-label"><b>所属</b></label>
+        <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: '', enable: enableVendorField">
+        </select>
+        <p class="text-danger" data-bind="text: vendorId.errorMessage, visible: vendorId.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_2-user-id" class="form-label"><b>ユーザID</b></label>
+        <input type="input" class="form-control font-monospace" id="sc13_2-user-id" maxlength="20" data-bind="value: userId">
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userId.errorMessage, visible: userId.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_2-user-name" class="form-label"><b>ユーザ名</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="sc13_2-user-name" maxlength="100" data-bind="textInput: userName">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userName.errorMessage, visible: userName.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 15rem">
+        <label for="sc13_2-user-password" class="form-label"><b>パスワード</b></label>
+        <div class="input-group">
+            <input type="password" class="form-control" id="sc13_2-user-password" maxlength="20" data-bind="textInput: password">
+        </div>
+    </div>
+    <div class="mb-3 p-0">
+        <p class="text-danger" data-bind="text: password.errorMessage, visible: password.errorMessage"></p>
+    </div>
+    <div class="mb-4 p-0 mt-0">
+        <p style="font-size: 0.8rem">
+            <ul>
+                <li>英数記号半角で8文字以上、20文字以内で設定してください</li>
+                <li>英大文字、英小文字、数字、記号が使用できます</li>
+                <li>英字の大文字と小文字は区別します</li>
+                <li>記号の、/、*、?、&quot;、&lt;、&gt;、|、&yen;、:、は使用できません</li>
+                <li>英大文字、英小文字、数字、記号のうち3種類は必ず使用してください</li>
+                <li>ユーザIDと同じ文字をパスワードに設定することはできません</li>
+            </ul>
+        </p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 30rem">
+        <label for="sc13_2-mail" class="form-label"><b>メールアドレス</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control font-monospace" id="sc13_2-mail" maxlength="100" data-bind="textInput: mail">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: mail.errorMessage, visible: mail.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label class="form-label"><b>権限</b></label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="sc13_2-role-admin" data-bind="checked: admin, enable: enableAdminField">
+            <label class="form-check-label" for="sc13_2-role-admin">管理者</label>
+        </div>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: regist">登録</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">キャンセル</button>
+    </div>
+
+</template>

@@ -1,0 +1,57 @@
+<template id="SC00-template">
+
+    <div class="container" style="max-width: 400px;margin-top:100px;">
+
+        <img class="img-fluid mx-auto" src="img/title.png">
+
+        <p class="text-end font-monospace text-muted">
+            <span>version </span>
+            <span data-bind="text:appVersion"></span>
+        </p>
+
+        <div class="mb-3 p-0" style="width: 100%; margin-top:30px;">
+            <input type="input" id="user_id" class="form-control" data-bind="value: userId, event: {'keyup': checkEnterkeyOnUserId}, enable: !isShowResetForm()" maxlength=100 placeholder="ユーザID または メールアドレス">
+        </div>
+        <div class="mb-3 p-0" style="width: 100%">
+            <input type="password" id="password" class="form-control" data-bind="value: password, event: {'keyup': checkEnterkeyOnPassword}, enable: !isShowResetForm()" maxlength=20 placeholder="パスワード">
+        </div>
+        <div class="mb-4 p-0">
+            <button class="btn btn-dark bg-gradient" data-bind="click: login, enable: !isShowResetForm()">ログイン
+                <svg style="vertical-align:-2px;" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="mb-3 p-0" data-bind="visible: !isShowResetForm()">
+            <a href="#" data-bind="click: toggleResetForm">パスワードをお忘れの方</a>
+        </div>
+        <div class="mb-3 p-0" data-bind="visible: isShowResetForm">
+            <hr>
+            <p>
+                パスワードを初期化します。
+                <button class="close" data-bind="click: toggleResetForm">
+                    <span>×</span>
+                </button>
+            </p>
+            <div class="mb-3 p-0">
+                <input type="input" id="mailaddress" class="form-control" data-bind="value:mail, event: {'keyup': checkEnterkeyOnMailaddress}" maxlength=100 placeholder="登録済みのメールアドレス" aria-describedby="initPasswordHelpBlock">
+            </div>
+            <small id="initPasswordHelpBlock" class="form-text text-muted">※ 初期化されたパスワードはメールでお知らせします。</small>
+
+            <button class="btn btn-danger bg-gradient" data-bind="click: resetPassword">パスワード初期化
+            </button>
+        </div>
+
+
+    </div>
+
+    <!-- モックアップ用 -->
+    <div data-bind="if: mockupMessage">
+        <p class="help-block" style="position: absolute;top: 0;border: 1px solid #dddddd;padding: 10px;width: 380px;border-radius: 10px;margin: 10px;background-color: gold; font-family: monospace;">
+            <small data-bind="html: mockupMessage"></small>
+        </p>
+    </div>
+    <!-- モックアップ用-->
+
+</template>

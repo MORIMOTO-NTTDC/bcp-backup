@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCPバックアップサービス｜アカウント管理ポータル</title>
+    <link rel="icon" href="img/favicon.ico">
+    <link href="./css/vendor.css" rel="stylesheet">
+    <link href="./css/app.css" rel="stylesheet">
+    <script src="./js/vendor.js"></script>
+</head>
+<body style="background-color: #fafafa;">
+
+    <noscript>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-xs-2"></div>
+                <div class="col-xs-8">
+                    <h2 class="alert alert-danger">
+                        <strong>JavaScriptが無効です</strong><br>
+                        JavaScriptを有効にしてください。設定方法はご利用のブラウザに従ってください。
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </noscript>
+
+    <div id="loading" style="display: none"><span></span><img src="./img/loadiing.svg" style="width:50px;"></div>
+
+    <!-- ログイン画面 -->
+    <div data-bind="if: currentComponentName() === 'SC00'" >
+        <!-- ko component: currentComponentName() --><!-- /ko -->
+    </div>
+    
+    <!-- ko component: 'sidebar-offcanvas' --><!-- /ko -->
+
+    <div data-bind="if: currentComponentName() !== 'SC00'">
+        <div class="container-fluid p-0 d-flex flex-row" style="max-width: 1600px;">
+
+            <!-- サイドメニュー -->
+            <!-- ko component: 'sidebar' --><!-- /ko -->
+
+            <!-- 右ペイン -->
+            <div class="container-fluid p-0" style="background-color: #fafafa; min-height: 100vh;">
+
+                <!-- ナビゲーションバー -->
+                <div data-bind="component: 'navbar'" class="bg-dark"></div>
+
+                <div style="height: 15px" class="bg-dark">
+                    <div style="height: 16px; border-top-left-radius: 7px; background-color: #fafafa;"></div>
+                </div>
+
+                <!-- メインコンテンツ -->
+                <div class="px-4 py-2">
+                    <!-- ko component: currentComponentName() --><!-- /ko -->
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let mockupMessage = null;
+    </script><template id="BLANK-template">
+</template>
+<template id="navbar-template">
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                <a class="btn btn-sm btn-outline-light d-block d-lg-none" data-bs-toggle="offcanvas" href="#offcanvasSidebar" role="button" aria-controls="offcanvasSidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                </a>                        
+            </span>
+            <div class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    </svg>
+                    <span data-bind="text:global.uvo.vendorName() + '　' + global.uvo.userName()"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end " aria-labelledby="dropdownMenu2">
+                    <li><button class="dropdown-item" type="button" data-bind="click:passChange">パスワード変更</button></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button class="dropdown-item" type="button" data-bind="click:logout">ログアウト</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</template>
+<template id="SC00-template">
+
+    <div class="container" style="max-width: 400px;margin-top:100px;">
+
+        <img class="img-fluid mx-auto" src="img/title.png">
+
+        <p class="text-end font-monospace text-muted">
+            <span>version </span>
+            <span data-bind="text:appVersion"></span>
+        </p>
+
+        <div class="mb-3 p-0" style="width: 100%; margin-top:30px;">
+            <input type="input" id="user_id" class="form-control" data-bind="value: userId, event: {'keyup': checkEnterkeyOnUserId}, enable: !isShowResetForm()" maxlength=100 placeholder="ユーザID または メールアドレス">
+        </div>
+        <div class="mb-3 p-0" style="width: 100%">
+            <input type="password" id="password" class="form-control" data-bind="value: password, event: {'keyup': checkEnterkeyOnPassword}, enable: !isShowResetForm()" maxlength=20 placeholder="パスワード">
+        </div>
+        <div class="mb-4 p-0">
+            <button class="btn btn-dark bg-gradient" data-bind="click: login, enable: !isShowResetForm()">ログイン
+                <svg style="vertical-align:-2px;" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="mb-3 p-0" data-bind="visible: !isShowResetForm()">
+            <a href="#" data-bind="click: toggleResetForm">パスワードをお忘れの方</a>
+        </div>
+        <div class="mb-3 p-0" data-bind="visible: isShowResetForm">
+            <hr>
+            <p>
+                パスワードを初期化します。
+                <button class="close" data-bind="click: toggleResetForm">
+                    <span>×</span>
+                </button>
+            </p>
+            <div class="mb-3 p-0">
+                <input type="input" id="mailaddress" class="form-control" data-bind="value:mail, event: {'keyup': checkEnterkeyOnMailaddress}" maxlength=100 placeholder="登録済みのメールアドレス" aria-describedby="initPasswordHelpBlock">
+            </div>
+            <small id="initPasswordHelpBlock" class="form-text text-muted">※ 初期化されたパスワードはメールでお知らせします。</small>
+
+            <button class="btn btn-danger bg-gradient" data-bind="click: resetPassword">パスワード初期化
+            </button>
+        </div>
+
+
+    </div>
+
+    <!-- モックアップ用 -->
+    <div data-bind="if: mockupMessage">
+        <p class="help-block" style="position: absolute;top: 0;border: 1px solid #dddddd;padding: 10px;width: 380px;border-radius: 10px;margin: 10px;background-color: gold; font-family: monospace;">
+            <small data-bind="html: mockupMessage"></small>
+        </p>
+    </div>
+    <!-- モックアップ用-->
+
+</template>
+<template id="SC02-template">
+
+    <h1 class="mb-3">パスワード変更</h1>
+
+    <div class="mb-0 p-0 mt-4" style="width: 15rem">
+        <input type="password" id="password1" class="form-control" data-bind="value: newPpassword, event: {'keyup': checkEnterkeyOnPassword1}" maxlength="20" placeholder="新しいパスワード">
+    </div>
+    <div class="mb-3 p-0 mt-0">
+        <p class="text-danger" data-bind="text: newPpassword.errorMessage, visible: newPpassword.errorMessage"></p>
+    </div>
+    <div class="mb-0 p-0 mt-0" style="width: 15rem">
+        <input type="password"  id="password2" class="form-control" data-bind="value: confirmPpassword, event: {'keyup': checkEnterkeyOnPassword2}" maxlength="20" placeholder="新しいパスワード（確認用）">
+    </div>
+    <div class="mb-3 p-0 mt-0">
+        <p class="text-danger" data-bind="text: confirmPpassword.errorMessage, visible: confirmPpassword.errorMessage"></p>
+    </div>
+    <div class="mb-3 p-0 mt-3">
+        <p style="font-size: 0.8rem">
+            <ul>
+                <li>英数記号半角で8文字以上、20文字以内で設定してください</li>
+                <li>英大文字、英小文字、数字、記号が使用できます</li>
+                <li>英字の大文字と小文字は区別します</li>
+                <li>記号の、/、*、?、&quot;、&lt;、&gt;、|、&yen;、:、は使用できません</li>
+                <li>英大文字、英小文字、数字、記号のうち3種類は必ず使用してください</li>
+                <li>ユーザIDと同じ文字をパスワードに設定することはできません</li>
+            </ul>
+        </p>
+    </div>
+    <button class="btn btn-primary bg-gradient" data-bind="click:submit">登録
+    </button>
+
+</template>
+<template id="SC11-template">
+
+    <!-- <h1 class="mb-4" style="color:#13334c">アカウント管理ポータル</h1> -->
+
+    <div class="card shadow-sm mb-3" data-bind="visible: (!loading() && infos && infos().length > 0) || downloading()">
+        <div class="card-header fs-3 rounded-top-3">
+            お知らせ
+        </div>
+        <div class="card-body">
+            <!-- ko foreach:infos -->
+            <!-- <hr data-bind="visible:$index() > 0"> -->
+            <div class="font-monospace text-muted mb-0" data-bind="text: startDate, css: {'border-top mt-3 pt-3': $index() > 0}"></div>
+            <h4 class="text-dark mb-1" style="font-weight:800;" data-bind="text: title"></h4>
+            <div class="mb-1" data-bind="html: newLinesToBR(article)"></div>
+            <!-- ko foreach: files -->
+            <button class="btn btn-sm btn-secondary bg-gradient" data-bind="click: $parents[1].downloadAttachedFile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                <span data-bind="text: attachedfileName" style="margin-left:3px;"></span>
+            </button>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+    </div>
+    
+    <div class="card shadow-sm" data-bind="visible: !loading() || downloading()">
+        <div class="card-header fs-3">
+            アカウント状況
+        </div>
+        <div class="card-body">
+            <div class="row border-bottom" style="height:130px">
+                <div class="col-md-4">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>総件数</div>
+                            <div style="text-align: right;">
+                                <span class="" style="font-size: 4rem" data-bind="text:accountTotal"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2" style="min-height:130px">
+                <div class="col-md-4" data-bind="click: function(){nextSC14('1')}, style: {cursor: accountError() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountError() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>同期失敗件数</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-danger " data-bind="text:accountError, style: {'border-bottom': accountError() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 border-start" data-bind="click: function(){nextSC14('2')}, style: {cursor: accountDisk() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountDisk() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>使用領域90%以上</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-warning " data-bind="text:accountDisk, style: {'border-bottom': accountDisk() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 border-start" data-bind="click: function(){nextSC14('3')}, style: {cursor: accountSoft() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountSoft() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>旧バージョン利用</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-warning " data-bind="text:accountSoft, style: {'border-bottom': accountSoft() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-4"></div>
+                <div class="col-4"></div> -->
+            </div>
+        </div>
+    </div>
+
+</template>
+<template id="SC12-template">
+
+    <!-- 一覧画面 -->
+    <div data-bind="visible: mode() === 'list'">
+        <!-- ko component: {name: 'SC12_1', params: {mode: mode, selectedInfo: selectedInfo}} --><!-- /ko -->
+    </div>
+
+    <!-- 新規登録画面 -->
+    <div data-bind="visible: mode() === 'regist'">
+        <!-- ko component: {name: 'SC12_2', params: {mode: mode}} --><!-- /ko -->
+    </div>
+
+    <!-- 詳細画面 -->
+    <div data-bind="visible: mode() === 'detail'">
+        <!-- ko component: {name: 'SC12_3', params: {mode: mode, selectedInfo: selectedInfo}} --><!-- /ko -->
+    </div>
+
+</template>
+<template id="SC12_1-template">
+
+    <div class="mb-4">
+        <button class="btn btn-lg btn-dark bg-gradient" data-bind="click: showSC12_2">
+            新規登録
+            <svg style="vertical-align:-2px;" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="mb-4">
+
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && infos().length === 0">
+            該当データはありません。
+        </div>
+
+        <!-- PCやタブレットで表示する場合はtableタグで -->
+        <!-- ko if: !smartPhone() -->
+        <table class="table table-hover" data-bind="visible: infos().length > 0">
+            <thead class="sticky-top table-light">
+                <tr>
+                    <th scope="col" style="width:17rem;">掲載期間</th>
+                    <th scope="col">タイトル</th>
+                    <th scope="col">登録者</th>
+                    <th scope="col" style="width:8rem;">添付ファイル</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: {data:infos, afterAdd: flashAnimation}">
+                <tr data-bind="click:$parent.showSC12_3" style="cursor: pointer;">
+                    <td>
+                        <span data-bind="text: startDate" class="font-monospace"></span>
+                        ～
+                        <span data-bind="visible: endDate, text: endDate" class="font-monospace"></span>
+                        <span data-bind="visible: !endDate">無期限</span>
+                    </td>
+                    <td data-bind="text: title"></td>
+                    <td data-bind="text: userName"></td>
+                    <td data-bind="text: (files.length > 0 ? '有' : '')"></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- /ko -->
+
+        <!-- スマホで表示する場合にはcardで -->
+        <!-- ko if: smartPhone -->
+        <!-- ko foreach: {data:infos} -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-header bg-light font-monospace">
+                <span data-bind="text: startDate" class="fw-bold"></span> - <span data-bind="text: endDate" class="fw-bold"></span>
+                <a href="#" class="float-end" data-bind="click:$parent.showSC12_3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="card-text" data-bind="text: title"></div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- /ko -->
+
+        <button class="btn btn-secondary bg-gradient"
+            data-bind="visible: hasContinueData, click: fetchMore">続きを表示</button>
+    
+    </div>
+
+</template>
+<template id="SC12_2-template">
+
+    <!-- <h1 class="mb-4">お知らせ管理｜新規登録</h1> -->
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-sdate" class="form-label"><b>掲載開始日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_2-sdate" data-bind="value: startDate" style="width:150px">
+        <p class="text-danger" data-bind="text: startDate.errorMessage, visible: startDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-edate" class="form-label"><b>掲載終了日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_2-edate" data-bind="value: endDate" style="width:150px">
+        <p class="text-danger" data-bind="text: endDate.errorMessage, visible: endDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-title" class="form-label"><b>タイトル</b></label>
+        <input type="input" class="form-control" id="sc12_2-title" maxlength=50 data-bind="value: title" style="max-width:50rem;">
+        <p class="text-danger" data-bind="text: title.errorMessage, visible: title.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_2-article" class="form-label"><b>記事</b></label>
+        <div class="input-group">
+            <textarea class="form-control" rows="6" id="sc12_2-article" maxlength=500 data-bind="textInput: article"></textarea>
+        </div>
+        <p class="text-danger" data-bind="text: article.errorMessage, visible: article.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="addUploadfile" class="form-label"><b>添付ファイル</b></label>
+        <input type="file" class="form-control" id="addUploadfile" data-bind="value: attachedfile" style="max-width:500px"/>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: regist">登録</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">キャンセル</button>
+    </div>
+
+</template>
+<template id="SC12_3-template">
+
+    <!-- <h1 class="mb-4">お知らせ管理｜編集</h1> -->
+
+    <div class="mb-4 p-0">
+        <label for="sc12_3-sdate" class="form-label"><b>掲載開始日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_3-sdate" data-bind="value: startDate" style="width:150px">
+        <p class="text-danger" data-bind="text: startDate.errorMessage, visible: startDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_3-edate" class="form-label"><b>掲載終了日</b></label>
+        <input type="date" class="form-control font-monospace" id="sc12_3-edate" data-bind="value: endDate" style="width:150px">
+        <p class="text-danger" data-bind="text: endDate.errorMessage, visible: endDate.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_3-title" class="form-label"><b>タイトル</b></label>
+        <input type="input" class="form-control" id="sc12_3-title" maxlength=50 data-bind="value: title" style="max-width:50rem;">
+        <p class="text-danger" data-bind="text: title.errorMessage, visible: title.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="sc12_3-article" class="form-label"><b>記事</b></label>
+        <div class="input-group">
+            <textarea class="form-control" rows="6" id="sc12_3-article" maxlength=500 data-bind="textInput: article"></textarea>
+        </div>
+        <p class="text-danger" data-bind="text: article.errorMessage, visible: article.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="modUploadfile" class="form-label"><b>添付ファイル</b></label>
+        <input class="form-control" type="file" id="modUploadfile" data-bind="value: attachedfile" style="max-width:500px"/>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label for="nowAttachedfile" class="form-label"><b>現在の添付ファイル</b></label>
+        <div data-bind="text: nowAttachedfile" class="fs-5"></div>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: update">更新</button>
+        <button class="btn btn-danger bg-gradient" data-bind="click: remove">削除</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">戻る</button>
+    </div>
+
+</template>
+<template id="SC13-template">
+
+    <!-- 一覧画面 -->
+    <div data-bind="visible: mode() === 'list'">
+        <!-- ko component: {name: 'SC13_1', params: {mode: mode, vendorsList: vendorsList, selectedUser: selectedUser}} --><!-- /ko -->
+    </div>
+
+    <!-- 新規登録画面 -->
+    <div data-bind="visible: mode() === 'regist'">
+        <!-- ko component: {name: 'SC13_2', params: {mode: mode, vendorsList: vendorsList}} --><!-- /ko -->
+    </div>
+
+    <!-- 詳細画面 -->
+    <div data-bind="visible: mode() === 'detail'">
+        <!-- ko component: {name: 'SC13_3', params: {mode: mode, vendorsList: vendorsList, selectedUser: selectedUser}} --><!-- /ko -->
+    </div>
+
+</template>
+<template id="SC13_1-template">
+
+    <!-- <h1 class="mb-4">ユーザ管理｜一覧</h1> -->
+
+    <div class="mb-4">
+        <button class="btn btn-lg btn-dark bg-gradient" data-bind="click: showSC13_2">
+            新規登録
+            <svg style="vertical-align:-2px;" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-xl">
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && users().length === 0">
+                該当データはありません。
+            </div>
+        
+            <!-- PCやタブレットで表示する場合はtableタグで -->
+            <!-- ko if: !smartPhone() -->
+            <table class="table table-hover" data-bind="visible: users().length > 0">
+                <thead class="sticky-top table-light">
+                    <tr>
+                        <th scope="col" style="width:400px">所属</th>
+                        <th scope="col">ユーザID</th>
+                        <th scope="col">ユーザ名</th>
+                        <th scope="col" style="width:6rem;">権限</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: {data:users, afterAdd: flashAnimation}">
+                    <tr data-bind="click:$parent.showSC13_3" style="cursor: pointer;">
+                        <td>
+                            <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:400px;">
+                                <abbr data-bind="attr:{title: vendorName}, text: vendorName"></abbr>
+                            </div>
+                        </td>
+                        <td data-bind="text: userId" class="font-monospace"></td>
+                        <td data-bind="text: userName"></td>
+                        <td data-bind="text: (admin === 'true' ? '管理者' : '')"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- /ko -->
+
+            <!-- スマホで表示する場合にはcardで -->
+            <!-- ko if: smartPhone -->
+            <!-- ko foreach: {data:users} -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-light font-monospace">
+                    <span data-bind="text: userId" class="fw-bold"></span>
+                    <a href="#" class="float-end" data-bind="click:$parent.showSC13_3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="card-text text-muted font-monospace float-end" data-bind="text: vendorName"></div>
+                    <div class="card-text" data-bind="text: userName"></div>
+                    <div class="card-text text-end" style="font-size: 0.8rem" data-bind="text: (admin === 'true' ? '管理者' : '')"></div>
+                </div>
+            </div>
+            <!-- /ko -->
+            <!-- /ko -->
+
+            <button class="btn btn-secondary bg-gradient"
+                data-bind="visible: hasContinueData, click: fetchMore">続きを表示</button>
+
+            <hr class="d-block d-xl-none my-3">
+
+        </div>
+
+
+        <div class="col-xl-auto" style="width: 15rem;">
+
+            <h5 class="mb-3">
+                <b>検索条件</b>
+            </h5>
+
+            <div class="mb-3 p-0" data-bind="visible: global.uvo.userType() === '0'">
+                <label class="form-label">所属</label>
+                <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: ''">
+                </select>
+            </div>
+
+            <div class="mb-3 p-0">
+                <label for="example1" class="form-label">ユーザID</label>
+                <input type="input" class="form-control" id="example1" data-bind="textInput: userId" maxlength="20">
+            </div>
+
+            <div class="mb-3 p-0">
+                <label for="example2" class="form-label">ユーザ名</label>
+                <input type="input" class="form-control" id="example2" data-bind="textInput: userName" maxlength="100">
+            </div>
+
+            <div class="mb-3 p-0">
+                <button class="btn btn-primary bg-gradient" data-bind="click: search">検索</button>
+                <button class="btn btn-light bg-gradient" data-bind="click: clear">クリア</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+<template id="SC13_2-template">
+
+    <!-- <h1 class="mb-4">ユーザ管理｜新規登録</h1> -->
+
+    <div class="mb-4 p-0" style="max-width: 35rem">
+        <label class="form-label"><b>所属</b></label>
+        <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: '', enable: enableVendorField">
+        </select>
+        <p class="text-danger" data-bind="text: vendorId.errorMessage, visible: vendorId.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_2-user-id" class="form-label"><b>ユーザID</b></label>
+        <input type="input" class="form-control font-monospace" id="sc13_2-user-id" maxlength="20" data-bind="value: userId">
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userId.errorMessage, visible: userId.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_2-user-name" class="form-label"><b>ユーザ名</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="sc13_2-user-name" maxlength="100" data-bind="textInput: userName">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userName.errorMessage, visible: userName.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 15rem">
+        <label for="sc13_2-user-password" class="form-label"><b>パスワード</b></label>
+        <div class="input-group">
+            <input type="password" class="form-control" id="sc13_2-user-password" maxlength="20" data-bind="textInput: password">
+        </div>
+    </div>
+    <div class="mb-3 p-0">
+        <p class="text-danger" data-bind="text: password.errorMessage, visible: password.errorMessage"></p>
+    </div>
+    <div class="mb-4 p-0 mt-0">
+        <p style="font-size: 0.8rem">
+            <ul>
+                <li>英数記号半角で8文字以上、20文字以内で設定してください</li>
+                <li>英大文字、英小文字、数字、記号が使用できます</li>
+                <li>英字の大文字と小文字は区別します</li>
+                <li>記号の、/、*、?、&quot;、&lt;、&gt;、|、&yen;、:、は使用できません</li>
+                <li>英大文字、英小文字、数字、記号のうち3種類は必ず使用してください</li>
+                <li>ユーザIDと同じ文字をパスワードに設定することはできません</li>
+            </ul>
+        </p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 30rem">
+        <label for="sc13_2-mail" class="form-label"><b>メールアドレス</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control font-monospace" id="sc13_2-mail" maxlength="100" data-bind="textInput: mail">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: mail.errorMessage, visible: mail.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label class="form-label"><b>権限</b></label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="sc13_2-role-admin" data-bind="checked: admin, enable: enableAdminField">
+            <label class="form-check-label" for="sc13_2-role-admin">管理者</label>
+        </div>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: regist">登録</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">キャンセル</button>
+    </div>
+
+</template>
+<template id="SC13_3-template">
+
+    <!-- <h1 class="mb-4">ユーザ管理｜詳細</h1> -->
+
+    <div class="mb-4 p-0" style="max-width: 35rem">
+        <label class="form-label"><b>所属</b></label>
+        <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: '', enable: enableVendorField">
+        </select>
+        <p class="text-danger" data-bind="text: vendorId.errorMessage, visible: vendorId.errorMessage"></p>
+    </div>
+
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_2-user-id" class="form-label"><b>ユーザID</b></label>
+        <input type="input" class="form-control font-monospace" id="sc13_2-user-id" maxlength="20" data-bind="value: userId">
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userId.errorMessage, visible: userId.errorMessage"></p>
+    </div>
+
+    <div class="mb-0 p-0" style="max-width: 23rem">
+        <label for="sc13_3-user-name" class="form-label"><b>ユーザ名</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control" id="sc13_3-user-name" maxlength="100" data-bind="textInput: userName">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: userName.errorMessage, visible: userName.errorMessage"></p>
+    </div>
+
+
+    <div class="mb-0 p-0" style="max-width: 30rem">
+        <label for="sc13_3-mail" class="form-label"><b>メールアドレス</b></label>
+        <div class="input-group">
+            <input type="text" class="form-control font-monospace" id="sc13_3-mail" maxlength="100" data-bind="textInput: mail">
+        </div>
+    </div>
+    <div class="mb-4 p-0">
+        <p class="text-danger" data-bind="text: mail.errorMessage, visible: mail.errorMessage"></p>
+    </div>
+
+    <div class="mb-4 p-0">
+        <label class="form-label"><b>権限</b></label>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="sc13_3-role-admin" data-bind="checked: admin, enable: enableAdminField">
+            <label class="form-check-label" for="sc13_3-role-admin">管理者</label>
+        </div>
+    </div>
+
+    <div class="mb-4 p-0" style="width: 16rem">
+        <label for="sc13_3-start-date" class="form-label"><b>更新日時</b></label>
+        <div class="font-monospace" data-bind="text: updateDate"></div>
+    </div>
+
+    <div class="mb-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click: update">更新</button>
+        <button class="btn btn-danger bg-gradient" data-bind="click: remove">削除</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">戻る</button>
+    </div>
+
+</template>
+<template id="SC14-template">
+
+    <!-- 一覧画面 -->
+    <div data-bind="visible: mode() === 'list'">
+        <!-- ko component: {name: 'SC14_1', params: {mode: mode, vendorsList: vendorsList, selectedAccount: selectedAccount}} --><!-- /ko -->
+    </div>
+
+    <!-- 新規登録画面 -->
+    <!-- div data-bind="visible: mode() === 'regist'">
+        ko component: {name: 'SC14_2', params: {mode: mode}}
+    </div -->
+
+    <!-- 詳細画面 -->
+    <div data-bind="visible: mode() === 'detail'">
+        <!-- ko component: {name: 'SC14_3', params: {mode: mode, vendorsList: vendorsList, selectedAccount: selectedAccount}} --><!-- /ko -->
+    </div>
+
+</template>
+<template id="SC14_1-template">
+
+    <!-- <h1 class="mb-4">アカウント管理｜一覧</h1> -->
+
+    <div class="row mb-4">
+
+        <div class="col-xl">
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && accounts().length === 0">
+                該当データはありません。
+            </div>
+        
+            <div class="row">
+                <!-- ko foreach: {data:accounts, afterAdd: flashAnimation} -->
+                <div class="col-lg-6 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body" data-bind="class: (downloadEnable === 'true')? 'bg-warning' : 'bg-white'">
+                            <a href="#" class="float-end" data-bind="click:$parent.showSC14_3">
+                                <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                </svg>
+                            </a>
+
+                            <h5 class="text-truncate" style="max-width:420px;margin-bottom: 0;">
+                                <span data-bind="text: accountId" class="font-monospace"></span>
+                                <abbr data-bind="attr:{title: accountName}"><strong data-bind="text: accountName"></strong></abbr>
+                            </h5>
+                            <h6 class="text-truncate mb-3" style="max-width:420px;color:#777;">
+                                <abbr data-bind="attr:{title: accountAddress}"><span data-bind="text: accountAddress"></span></abbr>
+                            </h6>
+
+                            <div class="d-flex flex-row">
+                                <div style="width:40%;aspect-ratio: 1;display: flex;justify-content: center;align-items: center;"
+                                data-bind="class: (status === '1' || status === '2') ? 'bg-success' : (status === '0' ? 'bg-secondary' : 'bg-danger')">
+                                    <div class="text-light" style="text-align: center;">
+                                        <div data-bind="text:global.const.code.displayStatus[status]" style="font-size:2rem;"></div>
+                                        <div data-bind="text:errorInfo"></div>
+                                        <div data-bind="text:lastdate" class="font-monospace" style="font-size:0.8rem;"></div>
+                                    </div>
+                                </div>
+                                <div class="ms-3 me-0 flex-fill">
+                                    <span style="font-size:1.3rem" data-bind="text:Math.floor(usedSize/backupCapa * 100)"></span>%
+                                    使用:
+                                    <span style="font-size:1.0rem" data-bind="text:usedSize"></span>GB
+                                    /
+                                    <span style="font-size:1.3rem" data-bind="text:backupCapa"></span>GB
+
+                                    <div class="progress" style="height: 5px">
+                                        <div class="progress-bar bg-primary" data-bind="style:{width:(usedSize/backupCapa * 100) + '%'}"></div>
+                                    </div>
+
+                                    <div class="mt-3" style="font-size: 1rem">アップロード：
+                                        <span data-bind="visible:uploadEnable === 'true'" class="text-primary">
+                                            <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+                                                <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8"/>
+                                            </svg>
+                                        </span>
+                                        <span data-bind="visible:uploadEnable !== 'true'" class="text-muted">
+                                            <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                                                <path d="M11 4a4 4 0 0 1 0 8H8a5 5 0 0 0 2-4 5 5 0 0 0-2-4zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8M0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5"/>
+                                            </svg>
+                                        </span>
+                                        <!-- <strong data-bind="text:uploadEnable === 'true' ? 'ON' : 'OFF'">ON</strong>  -->
+                                        <span data-bind="visible:uploadEnable === 'true'">
+                                            <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
+                                                <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
+                                            </svg>                                            
+                                            <strong data-bind=" text: uploadTiming"></strong><small>分</small>
+                                        </span>
+                                    </div>
+                                    <div style="font-size: 1rem">ダウンロード：
+                                        <span data-bind="visible:downloadEnable === 'true'" class="text-primary">
+                                            <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16">
+                                                <path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8"/>
+                                            </svg>
+                                        </span>
+                                        <span data-bind="visible:downloadEnable !== 'true'" class="text-muted">
+                                            <svg style="vertical-align:-3px" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16">
+                                                <path d="M11 4a4 4 0 0 1 0 8H8a5 5 0 0 0 2-4 5 5 0 0 0-2-4zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8M0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5"/>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <div class="mt-3">端末ソフトウェア：ver.<span data-bind="text:softVersion"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <button class="btn btn-secondary bg-gradient"
+                data-bind="visible: hasContinueData, click: fetchMore">続きを表示</button>
+
+            <hr class="d-block d-xl-none my-3">
+
+        </div>
+
+
+        <div class="col-xl-auto" style="width: 15rem;">
+
+            <h5 class="mb-3">
+                <b>検索条件</b>
+            </h5>
+
+            <div class="mb-3 p-0" data-bind="visible: global.uvo.userType() === '0'">
+                <label class="form-label">所属</label>
+                <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: ''">
+                </select>
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">アカウントID</label>
+                <input type="input" class="form-control" data-bind="textInput: accountId" maxlength="10">
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">アカウント名</label>
+                <input type="input" class="form-control" data-bind="textInput: accountName" maxlength="100">
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">アカウント住所</label>
+                <input type="input" class="form-control" data-bind="textInput: accountAddress" maxlength="200">
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">同期結果</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sc14_1-syncerror" data-bind="checked: syncError">
+                    <label class="form-check-label" for="sc14_1-syncerror">失敗のみ</label>
+                </div>
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">使用領域</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sc14_1-diskalert" data-bind="checked: diskAlert">
+                    <label class="form-check-label" for="sc14_1-diskalert">90%以上のみ</label>
+                </div>
+            </div>
+
+            <div class="mb-3 p-0">
+                <label class="form-label">ソフトウェア</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sc14_1-versionalert" data-bind="checked: versionAlert">
+                    <label class="form-check-label" for="sc14_1-versionalert">旧バージョンのみ</label>
+                </div>
+            </div>
+
+            <div class="mb-3 p-0">
+                <button class="btn btn-primary bg-gradient" data-bind="click: search">検索</button>
+                <button class="btn btn-light bg-gradient" data-bind="click: clear">クリア</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+<template id="SC14_3-template">
+
+    <div class="row">
+
+        <h3>
+            <span data-bind="text:id" class="font-monospace"></span>
+        </h3>
+
+        <h2>
+            <span data-bind="text:name" style="font-weight: 800;"></span>
+        </h2>
+
+        <div class="pb-3 border-bottom">
+            <h4>
+                <span data-bind="text:address"></span>
+            </h4>
+        </div>
+
+        <div class="col-lg-4 py-4 px-3">
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">使用容量（GB）</label>
+                <div data-bind="text: usedSize" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">最終同期日時</label>
+                <div data-bind="text: lastdate" class="ps-3 font-monospace fs-4 fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">同期結果</label>
+                <div data-bind="text: global.const.code.displayStatusLong[status()]" class="ps-3 fs-4 fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">エラー内容</label>
+                <div data-bind="text: errorInfo" class="ps-3 fs-4 fw-bold"></div>
+            </div>
+        
+            <div class="mb-1 p-0" style="width: 20rem">
+                <label class="form-label">端末ソフトウェア</label>
+                <div data-bind="text: softVersion" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+        </div>
+
+        <div class="col-lg-4 py-4 px-3 border-start">
+            <div class="mb-4 p-0">
+                <label class="form-label">バックアップ容量（GB）</label>
+                <div data-bind="text: backupCapa" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+            <div class="mb-2 p-0">
+                <label class="form-label">アップロード実行</label>
+                <div class="form-check form-switch form-control-lg ms-3 fs-4 pt-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="sc14_3-upload_enable" data-bind="checked: uploadEnable, enable: global.uvo.IsAdminUser, event: {change: changeUploadEnable}">
+                    <label class="form-check-label fw-bold" for="sc14_3-upload_enable" data-bind="text: (uploadEnable())? ' ON' : ' OFF'"></label>
+                </div>
+            </div>
+        
+            <div class="ms-3" data-bind="visible: uploadEnable" style="border-radius: 10px;border:1px solid #ddd;padding:20px 10px 10px 10px">
+                <label class="form-label">アップロード頻度（分）</label>
+                <div class="form-control-lg fs-4 pt-0">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing1" value="10" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing1">10</label>
+                        
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing2" value="30" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing2">30</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing3" value="60" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing3">60</label>
+                    </div>
+                </div>
+                <p class="text-danger ms-3" data-bind="text: uploadTiming.errorMessage, visible: uploadTiming.errorMessage"></p>
+            </div>
+        
+            <div class="mt-4 mb-1 p-0">
+                <label class="form-label">ダウンロード実行</label>
+                <div class="form-check form-switch form-control-lg ms-3 fs-4 pt-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="sc14_3-download_enable" data-bind="checked: downloadEnable, enable: global.uvo.IsAdminUser, event: {change: changeDownloadEnable}">
+                    <label class="form-check-label fw-bold" for="sc14_3-download_enable" data-bind="text: (downloadEnable())? ' ON' : ' OFF'"></label>
+                </div>
+            </div>
+                    
+        </div>
+
+        <div class="col-lg-4 py-4 px-3 border-start">
+            <div class="mb-4 p-0">
+                <label class="form-label">所属</label>
+                <div class="input-group">
+                    <select class="form-select form-control-lg ms-3" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: '', event: {change: changeVendor}, enable: enableVendorField">
+                    </select>
+                </div>
+                <p class="text-danger ms-3" data-bind="text: vendorId.errorMessage, visible: vendorId.errorMessage"></p>
+            </div>
+        
+            <div class="mb-4 p-0">
+                <label class="form-label">同期先S3サーバ（S3バケット）</label>
+                <div class="input-group ms-3">
+                    <span class="form-label fs-5 font-monospace fw-bold" data-bind="text: s3backet"></span>
+                </div>
+            </div>
+        
+            <div class="mb-1 p-0">
+                <label class="form-label">同期元ローカルディレクトリ</label>
+                <div class="input-group ms-3">
+                    <label class="form-label fs-5 font-monospace fw-bold" data-bind="text: localDir"></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="my-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click:update, visible: global.uvo.IsAdminUser">更新</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">戻る</button>
+    </div>
+
+</template>
+<template id="SC20-template">
+
+    <!-- <h1 class="mb-4">リンク集</h1> -->
+
+    <!-- ko foreach:links -->
+    <a target="_blank" data-bind="attr:{href: url}"><h4 class="text-dark mb-1" style="font-weight:800;" data-bind="text: title"></h4></a>
+    <div class="mb-4" data-bind="html: linkText"></div>
+    <!-- /ko -->
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && links().length === 0">
+        外部リンクはありません。
+    </div>
+
+</template>
+<template id="sidebar-template">
+    <div class="d-flex flex-column min-vh-100 d-none d-lg-flex p-3 text-white bg-dark" style="width: 250px;overflow-y: auto;">
+
+        <img class="img-fluid mt-3 mb-5 mx-5" src="./img/logo.png" />
+
+        <!-- ko foreach: menuList[global.uvo.menuType()] -->
+        <h5 class="nav nav-pills flex-column mb-3">
+            <!-- ko component: {name: 'sidebar-menu-item', params:{text: name, componentName: componentName}} --><!-- /ko -->
+        </h5>
+        <!-- /ko -->
+
+        <footer class="footer mt-auto">
+            <div class="container-fluid text-muted">
+                <span>version </span>
+                <span class="text-muted" data-bind="text:appVersion"></span>
+            </div>
+        </footer>
+
+    </div>
+
+</template>
+<template id="sidebar-menu-item-template">
+    <!-- <a href="#" class="nav-link text-white" data-bind="css: {active: isActive}, click: setComponentName"> -->
+    <a href="#" class="nav-link text-white" data-bind="css: {active: isActive}, attr: {href: componentName}">
+        <span data-bind="text:text"></span>
+    </a>
+</template>
+<template id="sidebar-offcanvas-template">
+    <div class="offcanvas offcanvas-start text-white bg-dark" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+
+            <!-- ko foreach: menuList[global.uvo.menuType()] -->
+            <h5 class="nav nav-pills flex-column mb-3">
+                <!-- ko component: {name: 'sidebar-menu-item', params:{text: name, componentName: componentName}} --><!-- /ko -->
+            </h5>
+            <!-- /ko -->
+
+        </div>
+    </div>
+
+</template>
+<script src="./js/app.js"></script>
+</body>
+</html>

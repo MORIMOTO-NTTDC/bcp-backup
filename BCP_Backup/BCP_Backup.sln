@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_Service", "BCP_Backup_Service\BCP_Backup_Service.csproj", "{22CF999C-DC2D-4037-85EE-C9FA5F49C026}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_Client", "BCP_Backup_Client\BCP_Backup_Client.csproj", "{786998A7-38CD-4F45-B513-711D6A835C6D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8} = {F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_Common", "BCP_Backup_Common\BCP_Backup_Common.csproj", "{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目", "ソリューション項目", "{36E64F95-92C2-4EFF-8A34-54B9C4C80C58}"
+	ProjectSection(SolutionItems) = preProject
+		BCP_Backup_gen_passwordhash.exe = BCP_Backup_gen_passwordhash.exe
+		README.md = README.md
+		vender-policy.json = vender-policy.json
+		WriteCredentialToReg.bat = WriteCredentialToReg.bat
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_Boot", "BCP_Backup_Boot\BCP_Backup_Boot.csproj", "{8B3BA112-0A7B-4007-BFB0-995418F277AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_UploadCommand", "BCP_Backup_UploadCommand\BCP_Backup_UploadCommand.csproj", "{AAA62D9C-B875-43A7-9615-B327591F6325}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_Backup_GetStatusCommand", "BCP_Backup_GetStatusCommand\BCP_Backup_GetStatusCommand.csproj", "{548222B5-96D2-4051-8A7A-AE04C72C06E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22CF999C-DC2D-4037-85EE-C9FA5F49C026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22CF999C-DC2D-4037-85EE-C9FA5F49C026}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22CF999C-DC2D-4037-85EE-C9FA5F49C026}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22CF999C-DC2D-4037-85EE-C9FA5F49C026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{786998A7-38CD-4F45-B513-711D6A835C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{786998A7-38CD-4F45-B513-711D6A835C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{786998A7-38CD-4F45-B513-711D6A835C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{786998A7-38CD-4F45-B513-711D6A835C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5C250BE-A5E0-4E44-BB91-8F1AB75B1FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B3BA112-0A7B-4007-BFB0-995418F277AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B3BA112-0A7B-4007-BFB0-995418F277AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B3BA112-0A7B-4007-BFB0-995418F277AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B3BA112-0A7B-4007-BFB0-995418F277AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAA62D9C-B875-43A7-9615-B327591F6325}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAA62D9C-B875-43A7-9615-B327591F6325}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAA62D9C-B875-43A7-9615-B327591F6325}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAA62D9C-B875-43A7-9615-B327591F6325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548222B5-96D2-4051-8A7A-AE04C72C06E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548222B5-96D2-4051-8A7A-AE04C72C06E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548222B5-96D2-4051-8A7A-AE04C72C06E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548222B5-96D2-4051-8A7A-AE04C72C06E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A639F4C8-9AC3-4863-852A-F83CB11C1ECA}
+	EndGlobalSection
+EndGlobal

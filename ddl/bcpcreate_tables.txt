@@ -1,0 +1,117 @@
+--// drop table bcpsoft CASCADE;
+CREATE TABLE BCPSOFT (
+    version varchar(10) NOT NULL
+) WITH (OIDS = False);
+
+
+--// drop table vendors CASCADE;
+CREATE TABLE VENDORS (
+    id varchar(4) NOT NULL, 
+    parent_id varchar(4) NOT NULL, 
+    name text NOT NULL, 
+    mail_address varchar(100), 
+    s3backet text, 
+    cognito_user_id varchar(20), 
+    cognito_access_token varchar(20), 
+    permit_password varchar(256), 
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_VENDORS PRIMARY KEY(id)
+) WITH (OIDS = False);
+
+
+--// drop table infos CASCADE;
+CREATE TABLE INFOS (
+    _key bigserial NOT NULL, 
+    start_date date NOT NULL, 
+    end_date date, 
+    title text NOT NULL, 
+    article text NOT NULL, 
+    version integer DEFAULT 0 NOT NULL, 
+    user_id varchar(20) NOT NULL, 
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_INFOS PRIMARY KEY(_key)
+) WITH (OIDS = False);
+
+
+--// drop table attachedfiles CASCADE;
+CREATE TABLE ATTACHEDFILES (
+    _key bigserial NOT NULL, 
+    info_key bigint NOT NULL, 
+    file_name text NOT NULL, 
+    file_data text NOT NULL, 
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_ATTACHEDFILES PRIMARY KEY(_key)
+) WITH (OIDS = False);
+
+
+--// drop table users CASCADE;
+CREATE TABLE USERS (
+    _key bigserial NOT NULL, 
+    vendor_id varchar(4) NOT NULL, 
+    parent_id varchar(4) NOT NULL, 
+    user_id varchar(20) UNIQUE NOT NULL, 
+    user_name text NOT NULL, 
+    password varchar(256) NOT NULL, 
+    mail_address varchar(100) UNIQUE NOT NULL, 
+    admin boolean DEFAULT false NOT NULL, 
+    version integer DEFAULT 0 NOT NULL, 
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_USERS PRIMARY KEY(_key)
+) WITH (OIDS = False);
+
+
+--// drop table accounts CASCADE;
+CREATE TABLE ACCOUNTS (
+    account_id varchar(10) NOT NULL, 
+    account_name text NOT NULL, 
+    account_address text NOT NULL, 
+    vendor_id varchar(4) NOT NULL, 
+    parent_id varchar(4) NOT NULL, 
+    upload_enable boolean DEFAULT true NOT NULL, 
+    upload_timing integer DEFAULT 60 NOT NULL, 
+    backup_capa integer NOT NULL, 
+    used_size integer DEFAULT 0 NOT NULL, 
+    download_enable boolean DEFAULT false NOT NULL, 
+    lastdate timestamp WITH TIME ZONE, 
+    status char(1) DEFAULT '0' NOT NULL, 
+    error_info text, 
+    soft_version text, 
+    local_dir text, 
+    mail_enable boolean DEFAULT false NOT NULL, 
+    version integer DEFAULT 0 NOT NULL, 
+    disable_flg boolean DEFAULT false NOT NULL, 
+    auth_key text NOT NULL,
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_ACCOUNTS PRIMARY KEY(account_id)
+) WITH (OIDS = False);
+
+
+--// drop table links CASCADE;
+CREATE TABLE LINKS (
+    _key bigserial NOT NULL, 
+    title text NOT NULL, 
+    link_text text NOT NULL, 
+    url text NOT NULL, 
+    update_date timestamp WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, 
+    CONSTRAINT pk_LINKS PRIMARY KEY(_key)
+) WITH (OIDS = False);
+
+ALTER TABLE USERS
+ADD FOREIGN KEY (vendor_id)
+REFERENCES VENDORS (id);
+
+ALTER TABLE ACCOUNTS
+ADD FOREIGN KEY (vendor_id)
+REFERENCES VENDORS (id);
+
+ALTER TABLE ATTACHEDFILES
+ADD FOREIGN KEY (info_key)
+REFERENCES INFOS (_key);
+
+ALTER TABLE INFOS
+ADD FOREIGN KEY (user_id)
+REFERENCES USERS (user_id);
+
+ALTER TABLE VENDORS
+ADD FOREIGN KEY (parent_id)
+REFERENCES VENDORS (id);

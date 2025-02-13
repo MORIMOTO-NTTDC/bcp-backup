@@ -1,0 +1,32 @@
+<template id="SC02-template">
+
+    <h1 class="mb-3">パスワード変更</h1>
+
+    <div class="mb-0 p-0 mt-4" style="width: 15rem">
+        <input type="password" id="password1" class="form-control" data-bind="value: newPpassword, event: {'keyup': checkEnterkeyOnPassword1}" maxlength="20" placeholder="新しいパスワード">
+    </div>
+    <div class="mb-3 p-0 mt-0">
+        <p class="text-danger" data-bind="text: newPpassword.errorMessage, visible: newPpassword.errorMessage"></p>
+    </div>
+    <div class="mb-0 p-0 mt-0" style="width: 15rem">
+        <input type="password"  id="password2" class="form-control" data-bind="value: confirmPpassword, event: {'keyup': checkEnterkeyOnPassword2}" maxlength="20" placeholder="新しいパスワード（確認用）">
+    </div>
+    <div class="mb-3 p-0 mt-0">
+        <p class="text-danger" data-bind="text: confirmPpassword.errorMessage, visible: confirmPpassword.errorMessage"></p>
+    </div>
+    <div class="mb-3 p-0 mt-3">
+        <p style="font-size: 0.8rem">
+            <ul>
+                <li>英数記号半角で8文字以上、20文字以内で設定してください</li>
+                <li>英大文字、英小文字、数字、記号が使用できます</li>
+                <li>英字の大文字と小文字は区別します</li>
+                <li>記号の、/、*、?、&quot;、&lt;、&gt;、|、&yen;、:、は使用できません</li>
+                <li>英大文字、英小文字、数字、記号のうち3種類は必ず使用してください</li>
+                <li>ユーザIDと同じ文字をパスワードに設定することはできません</li>
+            </ul>
+        </p>
+    </div>
+    <button class="btn btn-primary bg-gradient" data-bind="click:submit">登録
+    </button>
+
+</template>

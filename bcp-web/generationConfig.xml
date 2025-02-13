@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+  <context id="PostgresTables" targetRuntime="MyBatis3">
+
+    <!-- スキーマ情報を取得する DB への接続設定 -->
+    <jdbcConnection driverClass="org.postgresql.Driver"
+        connectionURL="jdbc:postgresql://localhost:5432/bcpdb"
+        userId="bcpuser"
+        password="bcp">
+    </jdbcConnection>
+
+    <!-- SELECT 結果等を格納するドメインモデルを生成する設定 -->
+    <javaModelGenerator targetPackage="jp.co.nttdata.bcp.domain.model" targetProject="bcp-web/src/main/java">
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <!-- SQL 設定が記述された XML を生成する設定 -->
+    <sqlMapGenerator targetPackage="jp.co.nttdata.bcp.domain.repository" targetProject="bcp-web/src/main/resources">
+    </sqlMapGenerator>
+    <!-- マッパークラスを生成する設定 -->
+    <javaClientGenerator type="XMLMAPPER" targetPackage="jp.co.nttdata.bcp.domain.repository" targetProject="bcp-web/src/main/java">
+    </javaClientGenerator>
+
+    <!-- コードを生成するテーブルを指定 -->
+	<!-- 全テーブルの場合 -->
+<!--    <table schema="public" tableName="%"-->
+<!--    	enableSelectByExample="false" enableDeleteByExample="false"-->
+<!--    	enableUpdateByExample="false" enableCountByExample="false">-->
+<!--		<property name="useActualColumnNames" value="false"  />-->
+<!--    </table>-->
+
+    <table schema="public" tableName="accounts"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="attachedfiles"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="bcpsoft"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false" enableInsert="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="infos"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="links"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">    
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="users"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+    <table schema="public" tableName="vendors"
+    	enableSelectByExample="false" enableDeleteByExample="false"
+    	enableUpdateByExample="false" enableCountByExample="false">
+		<property name="useActualColumnNames" value="false"  />
+    </table>
+
+  </context>
+</generatorConfiguration>

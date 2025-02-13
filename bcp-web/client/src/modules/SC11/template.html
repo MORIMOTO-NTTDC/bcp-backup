@@ -1,0 +1,87 @@
+<template id="SC11-template">
+
+    <!-- <h1 class="mb-4" style="color:#13334c">アカウント管理ポータル</h1> -->
+
+    <div class="card shadow-sm mb-3" data-bind="visible: (!loading() && infos && infos().length > 0) || downloading()">
+        <div class="card-header fs-3 rounded-top-3">
+            お知らせ
+        </div>
+        <div class="card-body">
+            <!-- ko foreach:infos -->
+            <!-- <hr data-bind="visible:$index() > 0"> -->
+            <div class="font-monospace text-muted mb-0" data-bind="text: startDate, css: {'border-top mt-3 pt-3': $index() > 0}"></div>
+            <h4 class="text-dark mb-1" style="font-weight:800;" data-bind="text: title"></h4>
+            <div class="mb-1" data-bind="html: newLinesToBR(article)"></div>
+            <!-- ko foreach: files -->
+            <button class="btn btn-sm btn-secondary bg-gradient" data-bind="click: $parents[1].downloadAttachedFile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                <span data-bind="text: attachedfileName" style="margin-left:3px;"></span>
+            </button>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+    </div>
+    
+    <div class="card shadow-sm" data-bind="visible: !loading() || downloading()">
+        <div class="card-header fs-3">
+            アカウント状況
+        </div>
+        <div class="card-body">
+            <div class="row border-bottom" style="height:130px">
+                <div class="col-md-4">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>総件数</div>
+                            <div style="text-align: right;">
+                                <span class="" style="font-size: 4rem" data-bind="text:accountTotal"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2" style="min-height:130px">
+                <div class="col-md-4" data-bind="click: function(){nextSC14('1')}, style: {cursor: accountError() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountError() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>同期失敗件数</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-danger " data-bind="text:accountError, style: {'border-bottom': accountError() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 border-start" data-bind="click: function(){nextSC14('2')}, style: {cursor: accountDisk() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountDisk() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>使用領域90%以上</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-warning " data-bind="text:accountDisk, style: {'border-bottom': accountDisk() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 border-start" data-bind="click: function(){nextSC14('3')}, style: {cursor: accountSoft() === '0' ? 'default' : 'pointer'}, css: {'div-link': accountSoft() !== '0'}">
+                    <div style="font-size:1.1rem;" class="d-flex align-items-center">
+                        <div class=" flex-fill p-1">
+                            <div>旧バージョン利用</div>
+                            <div style="text-align: right;">
+                                <span style="font-size: 4rem" class="text-warning " data-bind="text:accountSoft, style: {'border-bottom': accountSoft() === '0' ? '0' : 'solid 4px'}"></span>
+                                <span class="ms-1 text-muted">件</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-4"></div>
+                <div class="col-4"></div> -->
+            </div>
+        </div>
+    </div>
+
+</template>

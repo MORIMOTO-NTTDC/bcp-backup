@@ -1,0 +1,18 @@
+<template id="SC14-template">
+
+    <!-- 一覧画面 -->
+    <div data-bind="visible: mode() === 'list'">
+        <!-- ko component: {name: 'SC14_1', params: {mode: mode, vendorsList: vendorsList, selectedAccount: selectedAccount}} --><!-- /ko -->
+    </div>
+
+    <!-- 新規登録画面 -->
+    <!-- div data-bind="visible: mode() === 'regist'">
+        ko component: {name: 'SC14_2', params: {mode: mode}}
+    </div -->
+
+    <!-- 詳細画面 -->
+    <div data-bind="visible: mode() === 'detail'">
+        <!-- ko component: {name: 'SC14_3', params: {mode: mode, vendorsList: vendorsList, selectedAccount: selectedAccount}} --><!-- /ko -->
+    </div>
+
+</template>

@@ -1,0 +1,124 @@
+<template id="SC14_3-template">
+
+    <div class="row">
+
+        <h3>
+            <span data-bind="text:id" class="font-monospace"></span>
+        </h3>
+
+        <h2>
+            <span data-bind="text:name" style="font-weight: 800;"></span>
+        </h2>
+
+        <div class="pb-3 border-bottom">
+            <h4>
+                <span data-bind="text:address"></span>
+            </h4>
+        </div>
+
+        <div class="col-lg-4 py-4 px-3">
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">使用容量（GB）</label>
+                <div data-bind="text: usedSize" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">最終同期日時</label>
+                <div data-bind="text: lastdate" class="ps-3 font-monospace fs-4 fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">同期結果</label>
+                <div data-bind="text: global.const.code.displayStatusLong[status()]" class="ps-3 fs-4 fw-bold"></div>
+            </div>
+        
+            <div class="mb-4 p-0" style="width: 20rem">
+                <label class="form-label">エラー内容</label>
+                <div data-bind="text: errorInfo" class="ps-3 fs-4 fw-bold" style="overflow-wrap: anywhere;"></div>
+            </div>
+        
+            <div class="mb-1 p-0" style="width: 20rem">
+                <label class="form-label">端末ソフトウェア</label>
+                <div data-bind="text: softVersion" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+        </div>
+
+        <div class="col-lg-4 py-4 px-3 border-start">
+            <div class="mb-4 p-0">
+                <label class="form-label">バックアップ容量（GB）</label>
+                <div data-bind="text: backupCapa" class="ps-3 fs-4 font-monospace fw-bold"></div>
+            </div>
+        
+            <div class="mb-2 p-0">
+                <label class="form-label">アップロード実行</label>
+                <div class="form-check form-switch form-control-lg ms-3 fs-4 pt-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="sc14_3-upload_enable" data-bind="checked: uploadEnable, enable: global.uvo.IsAdminUser, event: {change: changeUploadEnable}">
+                    <label class="form-check-label fw-bold" for="sc14_3-upload_enable" data-bind="text: (uploadEnable())? ' ON' : ' OFF'"></label>
+                </div>
+            </div>
+        
+            <div class="ms-3" data-bind="visible: uploadEnable" style="border-radius: 10px;border:1px solid #ddd;padding:20px 10px 10px 10px">
+                <label class="form-label">アップロード頻度（分）</label>
+                <div class="form-control-lg fs-4 pt-0">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing1" value="10" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing1">10</label>
+                        
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing2" value="30" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing2">30</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="uploadtiming" id="sc14_3-timing3" value="60" data-bind="checked: uploadTiming, enable: global.uvo.IsAdminUser">
+                        <label class="form-check-label font-monospace fw-bold" for="sc14_3-timing3">60</label>
+                    </div>
+                </div>
+                <p class="text-danger ms-3" data-bind="text: uploadTiming.errorMessage, visible: uploadTiming.errorMessage"></p>
+            </div>
+        
+            <div class="mt-4 mb-1 p-0">
+                <label class="form-label">ダウンロード実行</label>
+                <div class="form-check form-switch form-control-lg ms-3 fs-4 pt-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="sc14_3-download_enable" data-bind="checked: downloadEnable, enable: global.uvo.IsAdminUser, event: {change: changeDownloadEnable}">
+                    <label class="form-check-label fw-bold" for="sc14_3-download_enable" data-bind="text: (downloadEnable())? ' ON' : ' OFF'"></label>
+                </div>
+            </div>
+                    
+        </div>
+
+        <div class="col-lg-4 py-4 px-3 border-start">
+            <div class="mb-4 p-0">
+                <label class="form-label">所属</label>
+                <div class="input-group">
+                    <select class="form-select form-control-lg ms-3" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: '', event: {change: changeVendor}, enable: enableVendorField">
+                    </select>
+                </div>
+                <p class="text-danger ms-3" data-bind="text: vendorId.errorMessage, visible: vendorId.errorMessage"></p>
+            </div>
+        
+            <div class="mb-4 p-0">
+                <label class="form-label">同期先S3サーバ（S3バケット）</label>
+                <div class="input-group ms-3">
+                    <span class="form-label fs-5 font-monospace fw-bold" data-bind="text: s3backet"></span>
+                </div>
+            </div>
+        
+            <div class="mb-1 p-0">
+                <label class="form-label">同期元ローカルディレクトリ</label>
+                <div class="input-group ms-3">
+                    <label class="form-label fs-5 font-monospace fw-bold" data-bind="text: localDir"></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="my-4 p-0">
+        <button class="btn btn-primary bg-gradient" data-bind="click:update, visible: global.uvo.IsAdminUser">更新</button>
+        <button class="btn btn-secondary bg-gradient" data-bind="click: cancel">戻る</button>
+    </div>
+
+</template>

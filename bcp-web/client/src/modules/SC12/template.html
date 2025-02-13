@@ -1,0 +1,18 @@
+<template id="SC12-template">
+
+    <!-- 一覧画面 -->
+    <div data-bind="visible: mode() === 'list'">
+        <!-- ko component: {name: 'SC12_1', params: {mode: mode, selectedInfo: selectedInfo}} --><!-- /ko -->
+    </div>
+
+    <!-- 新規登録画面 -->
+    <div data-bind="visible: mode() === 'regist'">
+        <!-- ko component: {name: 'SC12_2', params: {mode: mode}} --><!-- /ko -->
+    </div>
+
+    <!-- 詳細画面 -->
+    <div data-bind="visible: mode() === 'detail'">
+        <!-- ko component: {name: 'SC12_3', params: {mode: mode, selectedInfo: selectedInfo}} --><!-- /ko -->
+    </div>
+
+</template>

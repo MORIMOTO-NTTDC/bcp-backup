@@ -1,0 +1,14 @@
+<template id="SC20-template">
+
+    <!-- <h1 class="mb-4">リンク集</h1> -->
+
+    <!-- ko foreach:links -->
+    <a target="_blank" data-bind="attr:{href: url}"><h4 class="text-dark mb-1" style="font-weight:800;" data-bind="text: title"></h4></a>
+    <div class="mb-4" data-bind="html: linkText"></div>
+    <!-- /ko -->
+
+    <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && links().length === 0">
+        外部リンクはありません。
+    </div>
+
+</template>

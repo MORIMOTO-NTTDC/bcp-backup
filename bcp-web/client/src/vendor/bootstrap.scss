@@ -1,0 +1,58 @@
+//フォントファミリーの設定
+$font-family-sans-serif: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+
+//基本のフォントサイズの設定 1rem = 16px
+$font-size-base: 0.9rem;
+
+//行間の設定
+$line-height-base: 1.5;
+$line-height-sm:   1.25;
+$line-height-lg:   2;
+
+//見出しフォントの太さ
+$headings-font-weight: 500;
+
+//テーマカラーの設定
+$primary:       #196958;
+$secondary:     #d1ccc0;
+$success:       #2470a0;
+$info:          #68bde1;
+$warning:       #d9bf77;
+$danger:        #b84a39;
+$light:         #f7f1e3;
+$dark:          #13334c;
+
+$btn-border-width: 1.5px;
+$btn-border-radius: .18rem;
+
+//リンクの文字色
+$link-color:    #227093;
+
+//bodyの背景、文字色
+// $body-bg:       #334155;
+$body-bg:       #fff;
+$body-color:    #212529;
+
+//input-groupのaddonの背景色
+$input-group-addon-bg: #e9ecef;
+
+$my-item-hover: #0d2130;
+
+$dropdown-dark-bg: $dark;
+$dropdown-dark-link-hover-bg: $my-item-hover;
+
+//アラートの背景、ボーダー、文字の色 テーマカラーとの差
+$alert-bg-scale:     -20%;
+$alert-border-scale: 20%;
+$alert-color-scale:  -10%;
+
+$nav-pills-link-active-bg: $my-item-hover;
+
+$table-bg: #fff;
+
+$input-group-addon-bg: $body-bg;
+
+
+@import "../bootstrap-5.0.2/scss/bootstrap";
+

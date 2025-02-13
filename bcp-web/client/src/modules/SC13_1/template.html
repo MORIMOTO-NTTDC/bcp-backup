@@ -1,0 +1,110 @@
+<template id="SC13_1-template">
+
+    <!-- <h1 class="mb-4">ユーザ管理｜一覧</h1> -->
+
+    <div class="mb-4">
+        <button class="btn btn-lg btn-dark bg-gradient" data-bind="click: showSC13_2">
+            新規登録
+            <svg style="vertical-align:-2px;" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"/>
+                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="row mb-4">
+
+        <div class="col-xl">
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" data-bind="visible: ajaxing() === false && users().length === 0">
+                該当データはありません。
+            </div>
+        
+            <!-- PCやタブレットで表示する場合はtableタグで -->
+            <!-- ko if: !smartPhone() -->
+            <table class="table table-hover" data-bind="visible: users().length > 0">
+                <thead class="sticky-top table-light">
+                    <tr>
+                        <th scope="col" style="width:400px">所属</th>
+                        <th scope="col">ユーザID</th>
+                        <th scope="col">ユーザ名</th>
+                        <th scope="col" style="width:6rem;">権限</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: {data:users, afterAdd: flashAnimation}">
+                    <tr data-bind="click:$parent.showSC13_3" style="cursor: pointer;">
+                        <td>
+                            <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:400px;">
+                                <abbr data-bind="attr:{title: vendorName}, text: vendorName"></abbr>
+                            </div>
+                        </td>
+                        <td data-bind="text: userId" class="font-monospace"></td>
+                        <td data-bind="text: userName"></td>
+                        <td data-bind="text: (admin === 'true' ? '管理者' : '')"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- /ko -->
+
+            <!-- スマホで表示する場合にはcardで -->
+            <!-- ko if: smartPhone -->
+            <!-- ko foreach: {data:users} -->
+            <div class="card mb-3 shadow-sm">
+                <div class="card-header bg-light font-monospace">
+                    <span data-bind="text: userId" class="fw-bold"></span>
+                    <a href="#" class="float-end" data-bind="click:$parent.showSC13_3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <div class="card-text text-muted font-monospace float-end" data-bind="text: vendorName"></div>
+                    <div class="card-text" data-bind="text: userName"></div>
+                    <div class="card-text text-end" style="font-size: 0.8rem" data-bind="text: (admin === 'true' ? '管理者' : '')"></div>
+                </div>
+            </div>
+            <!-- /ko -->
+            <!-- /ko -->
+
+            <button class="btn btn-secondary bg-gradient"
+                data-bind="visible: hasContinueData, click: fetchMore">続きを表示</button>
+
+            <hr class="d-block d-xl-none my-3">
+
+        </div>
+
+
+        <div class="col-xl-auto" style="width: 15rem;">
+
+            <h5 class="mb-3">
+                <b>検索条件</b>
+            </h5>
+
+            <div class="mb-3 p-0" data-bind="visible: global.uvo.userType() === '0'">
+                <label class="form-label">所属</label>
+                <select class="form-select" aria-label="Default select example" data-bind="options: vendors, optionsText: 'name', value: vendorId, optionsValue: 'id', optionsCaption: ''">
+                </select>
+            </div>
+
+            <div class="mb-3 p-0">
+                <label for="example1" class="form-label">ユーザID</label>
+                <input type="input" class="form-control" id="example1" data-bind="textInput: userId" maxlength="20">
+            </div>
+
+            <div class="mb-3 p-0">
+                <label for="example2" class="form-label">ユーザ名</label>
+                <input type="input" class="form-control" id="example2" data-bind="textInput: userName" maxlength="100">
+            </div>
+
+            <div class="mb-3 p-0">
+                <button class="btn btn-primary bg-gradient" data-bind="click: search">検索</button>
+                <button class="btn btn-light bg-gradient" data-bind="click: clear">クリア</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
